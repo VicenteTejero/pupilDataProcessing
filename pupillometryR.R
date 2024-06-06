@@ -19,17 +19,17 @@ Sdata <- make_pupillometryr_data(data = pupil_data,
 
 new_data <- replace_missing_data(data = Sdata)
 
-head(new_data)
 plot(new_data, pupil = LPupil, group = 'condition')
 plot(new_data, pupil = LPupil, group = 'subject') 
+
 regressed_data <- regress_data(data = new_data,
                                pupil1 = RPupil,
                                pupil2 = LPupil)
 mean_data <- calculate_mean_pupil_size(data = regressed_data, 
                                        pupil1 = RPupil, 
                                        pupil2 = LPupil)
-
 plot(mean_data, pupil = mean_pupil, group = 'subject')
+
 mean_data <- downsample_time_data(data = mean_data,
                                   pupil = mean_pupil,
                                   timebin_size = 50,
