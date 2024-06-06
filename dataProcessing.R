@@ -102,34 +102,40 @@ mean_data <- calculate_mean_pupil_size(data = regressed_data,
                                        pupil1 = RPupil, 
                                        pupil2 = LPupil)
 
-mean_data_base <- baseline_data(data = mean_data, pupil = mean_pupil, start = 0, stop = 100)
+mean_data2 <- clean_missing_data(mean_data,
+                                 pupil = mean_pupil,
+                                 trial_threshold = .75,
+                                 subject_trial_threshold = .75)
 
-plot(mean_data_base, pupil = mean_pupil, group = 'condition')
-plot(mean_data_base, pupil = mean_pupil, group = 'subject')
 
-mean_data_downsample <- downsample_time_data(data = mean_data_base,
+mean_data_downsample <- downsample_time_data(data = mean_data2,
                                   pupil = mean_pupil,
-                                  timebin_size = 0.5,
+                                  timebin_size = 0.1,
                                   option = 'median')
+
 
 filtered_data <- filter_data(data = mean_data_downsample,
                              pupil = mean_pupil,
                              filter = 'median',
                              degree = 11)
 
-plot(filtered_data, pupil = mean_pupil, group = 'condition')
-plot(filtered_data, pupil = mean_pupil, group = 'subject')
-plot(filtered_data, pupil = mean_pupil, group = 'Type')
+#plot(mean_data_downsample, pupil = mean_pupil, group = 'condition')
+#plot(mean_data_downsample, pupil = mean_pupil, group = 'subject')
+#plot(mean_data_downsample, pupil = mean_pupil, group = 'Type')
 
-int_data <- interpolate_data(data = filtered_data,
+int_data <- interpolate_data(data = mean_data_downsample,
                              pupil = mean_pupil,
                              type = 'linear')
 
-plot(int_data, pupil = mean_pupil, group = 'condition')
-plot(int_data, pupil = mean_pupil, group = 'subject')
-plot(int_data, pupil = mean_pupil, group = 'Type')
+base_data <- baseline_data(data = int_data,
+                           pupil = mean_pupil,
+                           start = 0,
+                           stop = 100)
+
+
+
 # Grafico de la dilatacion pupilar promedio por tiempo y por ensayo
-ggplot(filtered_data, aes(x = Time, y = mean_pupil, color = Trial)) +
+ggplot(base_data, aes(x = Time, y = mean_pupil, color = Trial)) +
   geom_line() +
   labs(title = "Pupil Dilation Over Time by Trial",
        x = "Time Trial",
@@ -139,7 +145,7 @@ ggplot(filtered_data, aes(x = Time, y = mean_pupil, color = Trial)) +
   theme(legend.position = "right")
 
 # Crear el gráfico faceteado por 'Type'
-ggplot(filtered_data, aes(x = Time, y = mean_pupil, color = Trial)) +
+ggplot(base_data, aes(x = Time, y = mean_pupil, color = Trial)) +
   geom_line() +
   facet_wrap(~ Type) +
   labs(title = "Pupil Dilation Over Time by Trial",
