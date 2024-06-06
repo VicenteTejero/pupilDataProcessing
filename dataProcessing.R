@@ -70,7 +70,7 @@ df <- bind_rows(list_of_dataframes)
 
 # Crear la columna Type basada en la columna Trial
 df <- df %>%
-  mutate(Type = ifelse(grepl("COMBINED", Trial), "S&P y Bloomberg", "S&P"))
+  mutate(Type = ifelse(grepl("Bloomberg", Trial), "S&P y Bloomberg", "S&P"))
 
 # Seleccionar y renombrar columnas
 df <- df %>% select(ID, Trial, Time_Trial, LPD, RPD, Type) %>%
@@ -117,6 +117,7 @@ plot(filtered_data, pupil = mean_pupil, group = 'condition')
 plot(filtered_data, pupil = mean_pupil, group = 'subject')
 plot(filtered_data, pupil = mean_pupil, group = 'Type')
 
+# Grafico de la dilatacion pupilar promedio por tiempo y por ensayo
 ggplot(filtered_data, aes(x = Time, y = mean_pupil, color = Trial)) +
   geom_line() +
   labs(title = "Pupil Dilation Over Time by Trial",
@@ -125,6 +126,20 @@ ggplot(filtered_data, aes(x = Time, y = mean_pupil, color = Trial)) +
        color = "Trial") +
   theme_minimal() +
   theme(legend.position = "right")
+
+# Crear el gráfico faceteado por 'Type'
+ggplot(filtered_data, aes(x = Time, y = mean_pupil, color = Trial)) +
+  geom_line() +
+  facet_wrap(~ Type) +
+  labs(title = "Pupil Dilation Over Time by Trial",
+       x = "Time Trial",
+       y = "Mean Pupil Dilation",
+       color = "Trial") +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+
+
 
 
 
