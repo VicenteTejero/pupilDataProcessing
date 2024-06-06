@@ -1,0 +1,69 @@
+pygaze initiation report start
+display resolution: 1024x768
+display size in cm: 33.8x27.1
+samplerate: 60.0 Hz
+sampletime: 16.666666666666668 ms
+fixation threshold: 1.5 degrees
+speed threshold: 35 degrees/second
+acceleration threshold: 9500 degrees/second**2
+pygaze initiation report end
+pygaze calibration report start
+accuracy (degrees): LX=0.5723336268908906, LY=1.257792259328486, RX=0.6490118306328774, RY=0.5743509594029641
+accuracy (in pixels): LX=16.86641777777779, LY=37.06538666666666, RX=19.12604444444443, RY=16.925866666666693
+precision (RMS noise in pixels): X=19.616784266753218, Y=36.39970416332198
+distance between participant and display: 57.0 cm
+fixation threshold: 43.75948284317528 pixels
+speed threshold: 1.0208214427266524 pixels/ms
+acceleration threshold: 279.64744382521036 pixels/ms**2
+pygaze calibration report end
+start_trial plot_4YTD.png
+
+stop_trial
+start_trial plot_combined_7YTD.png
+
+stop_trial
+start_trial plot_combined_4YTD.png
+
+stop_trial
+start_trial plot_combined_6YTD.png
+
+stop_trial
+start_trial plot_6YTD.png
+
+stop_trial
+pygaze calibration report start
+accuracy (degrees): LX=0.7910186869133058, LY=1.365031241484068, RX=0, RY=0
+accuracy (in pixels): LX=23.310791111111115, LY=40.22528, RX=0, RY=0
+precision (RMS noise in pixels): X=28.623356934481947, Y=58.64034354540566
+distance between participant and display: 57.0 cm
+fixation threshold: 43.75948284317528 pixels
+speed threshold: 1.0208214427266524 pixels/ms
+acceleration threshold: 279.64744382521036 pixels/ms**2
+pygaze calibration report end
+start_trial plot_2YTD.png
+
+stop_trial
+pygaze calibration report start
+accuracy (degrees): LX=0.5585260088946317, LY=1.8658756743528235, RX=0, RY=0
+accuracy (in pixels): LX=16.459519999999987, LY=54.98208000000004, RX=0, RY=0
+precision (RMS noise in pixels): X=19.6687327329851, Y=67.17889648975193
+distance between participant and display: 57.0 cm
+fixation threshold: 43.75948284317528 pixels
+speed threshold: 1.0208214427266524 pixels/ms
+acceleration threshold: 279.64744382521036 pixels/ms**2
+pygaze calibration report end
+start_trial plot_combined_5YTD.png
+
+stop_trial
+pygaze calibration report start
+accuracy (degrees): LX=0.8735675461602176, LY=0.6890499736437933, RX=0, RY=0
+accuracy (in pixels): LX=25.743360000000003, LY=20.305920000000004, RX=0, RY=0
+precision (RMS noise in pixels): X=34.49153454536152, Y=29.018895667588733
+distance between participant and display: 57.0 cm
+fixation threshold: 43.75948284317528 pixels
+speed threshold: 1.0208214427266524 pixels/ms
+acceleration threshold: 279.64744382521036 pixels/ms**2
+pygaze calibration report end
+start_trial plot_combined_2YTD.png
+
+stop_trial

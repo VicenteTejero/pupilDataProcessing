@@ -1,0 +1,60 @@
+pygaze initiation report start
+display resolution: 1024x768
+display size in cm: 33.8x27.1
+samplerate: 60.0 Hz
+sampletime: 16.666666666666668 ms
+fixation threshold: 1.5 degrees
+speed threshold: 35 degrees/second
+acceleration threshold: 9500 degrees/second**2
+pygaze initiation report end
+pygaze calibration report start
+accuracy (degrees): LX=0.39872841165664547, LY=2.655694425327214, RX=1.6248565178134844, RY=2.2373920504343747
+accuracy (in pixels): LX=11.750399999999999, LY=78.24864000000001, RX=47.880959999999995, RY=65.92704000000002
+precision (RMS noise in pixels): X=44.92278294341057, Y=100.85883750836477
+distance between participant and display: 57.0 cm
+fixation threshold: 43.75948284317528 pixels
+speed threshold: 1.0208214427266524 pixels/ms
+acceleration threshold: 279.64744382521036 pixels/ms**2
+pygaze calibration report end
+start_trial plot_combined_7YTD.png
+
+stop_trial
+start_trial plot_1YTD.png
+
+stop_trial
+start_trial plot_combined_2YTD.png
+
+stop_trial
+start_trial plot_4YTD.png
+
+stop_trial
+start_trial plot_6YTD.png
+
+stop_trial
+start_trial plot_combined_4YTD.png
+
+stop_trial
+start_trial plot_2YTD.png
+
+stop_trial
+start_trial plot_combined_3YTD.png
+
+stop_trial
+start_trial plot_combined_1YTD.png
+
+stop_trial
+start_trial plot_combined_6YTD.png
+
+stop_trial
+start_trial plot_7YTD.png
+
+stop_trial
+start_trial plot_3YTD.png
+
+stop_trial
+start_trial plot_5YTD.png
+
+stop_trial
+start_trial plot_combined_5YTD.png
+
+stop_trial

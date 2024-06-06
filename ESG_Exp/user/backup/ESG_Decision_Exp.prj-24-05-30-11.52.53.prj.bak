@@ -1,0 +1,36 @@
+%YAML:1.0
+---
+FileVersion: 2
+NextUserId: 11
+NextMediaId: 0
+NextAOIId: 0
+NextWebId: 0
+Media:
+   - { Id:0, PlaybackIndex:0, Name:ScreenRecording, Type:2, Path:"",
+       Duration:0., Randomize:0, Scale:1, BK_RED:50, BK_GREEN:50,
+       BK_BLUE:50 }
+UserData:
+   - { Id:0, Name:User 0, Age:0, Gender:M, OffsetX:0., OffsetY:0.,
+       Color:[ 0., 0., 255., 0. ], DataRecords:24 }
+   - { Id:1, Name:User 1, Age:0, Gender:M, OffsetX:0., OffsetY:0.,
+       Color:[ 0., 255., 0., 0. ], DataRecords:17 }
+   - { Id:2, Name:User 2, Age:0, Gender:M, OffsetX:0., OffsetY:0.,
+       Color:[ 44., 0., 0., 0. ], DataRecords:10 }
+   - { Id:3, Name:User 3, Age:0, Gender:M, OffsetX:0., OffsetY:0.,
+       Color:[ 185., 26., 255., 0. ], DataRecords:17 }
+   - { Id:4, Name:User 4, Age:0, Gender:M, OffsetX:0., OffsetY:0.,
+       Color:[ 0., 211., 255., 0. ], DataRecords:15 }
+   - { Id:5, Name:User 5, Age:0, Gender:M, OffsetX:0., OffsetY:0.,
+       Color:[ 0., 88., 0., 0. ], DataRecords:15 }
+   - { Id:6, Name:User 6, Age:0, Gender:M, OffsetX:0., OffsetY:0.,
+       Color:[ 255., 132., 132., 0. ], DataRecords:13 }
+   - { Id:7, Name:User 7, Age:0, Gender:M, OffsetX:0., OffsetY:0.,
+       Color:[ 70., 79., 158., 0. ], DataRecords:37173 }
+   - { Id:8, Name:User 8, Age:0, Gender:M, OffsetX:0., OffsetY:0.,
+       Color:[ 193., 255., 0., 0. ], DataRecords:48349 }
+   - { Id:9, Name:User 9, Age:0, Gender:M, OffsetX:0., OffsetY:0.,
+       Color:[ 149., 132., 0., 0. ], DataRecords:1664 }
+   - { Id:10, Name:User 10, Age:0, Gender:M, OffsetX:0., OffsetY:0.,
+       Color:[ 123., 0., 0., 0. ], DataRecords:30076 }
+AOI:
+   []

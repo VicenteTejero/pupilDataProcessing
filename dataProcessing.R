@@ -12,7 +12,7 @@ list_of_dataframes <- list()
 for (i in 2:17) {
   if (i == 12 || i == 9) next
   
-  file_name <- paste0('../ESG_exp/subject-', i, '.tsv')
+  file_name <- paste0('ESG_exp/subject-', i, '.tsv')
   df <- read_tsv(file_name)
   df <- df[-c(1:4), ]
   
@@ -110,7 +110,7 @@ mean_data2 <- clean_missing_data(mean_data,
 
 mean_data_downsample <- downsample_time_data(data = mean_data2,
                                   pupil = mean_pupil,
-                                  timebin_size = 0.1,
+                                  timebin_size = 0.05,
                                   option = 'median')
 
 
