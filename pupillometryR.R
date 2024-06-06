@@ -37,7 +37,7 @@ mean_data <- downsample_time_data(data = mean_data,
 
 missing <- calculate_missing_data(mean_data, 
                                   mean_pupil)
-head
+
 
 mean_data2 <- clean_missing_data(mean_data,
                                  pupil = mean_pupil,
