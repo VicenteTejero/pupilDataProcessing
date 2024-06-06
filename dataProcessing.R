@@ -4,20 +4,35 @@ library(readr)
 library(zoo)
 library(dplyr)
 
-s17 <- read_tsv('../ESG_exp/subject-17.tsv')
-s17 <- s17[-c(1:4), ]
+list_of_dataframes <- list()
 
-# Pre-procesamiento db
-s17$USER <- na.locf(s17$USER, na.rm = FALSE)
-s17 <- s17 %>% rename(Trial = USER)
-s17$ID <- 17
-s17$ID <- as.character(s17$ID)
-s17 <- s17[s17$FPOGV != 0, ]
-s17 <- s17 %>% filter(Trial != 'STOP_TRIAL')
-s17 <- s17 %>%
+for (i in 2:17) {
+
+  if (i == 12 || i ==9) next
+
+  file_name <- paste0('../ESG_exp/subject-', i, '.tsv')
+  df <- read_tsv(file_name)
+  df <- df[-c(1:4), ]
+  
+  # Preprocesamiento
+  df$USER <- na.locf(df$USER, na.rm = FALSE)
+  df <- df %>% rename(Trial = USER)
+  df$Trial <- as.character(df$Trial)  # Asegurar que Trial sea de tipo character
+  df$ID <- as.character(i)
+  df <- df[df$FPOGV != 0, ]
+  df <- df %>% filter(Trial != 'STOP_TRIAL')
+  
+  # Añadir el dataframe a la lista
+  list_of_dataframes[[i]] <- df
+}
+
+# Combinar todos los dataframes en uno solo
+df <- bind_rows(list_of_dataframes)
+
+df <- df %>%
   mutate(Type = ifelse(grepl("COMBINED", Trial), "S&P y Bloomberg", "S&P"))
-s17 <- s17 %>% select(ID, Trial,TIME,  LPD, RPD, Type)
-s17 <- s17 %>% rename(
+df <- df %>% select(ID, Trial,TIME,  LPD, RPD, Type)
+df <- df %>% rename(
   Time = TIME,
   LPupil = LPD,
   RPupil = RPD
@@ -26,18 +41,16 @@ s17 <- s17 %>% rename(
 #Theme graficos
 theme_set(theme_classic(base_size = 12))
 
-Sdata17 <- make_pupillometryr_data(data = s17,
+df <- make_pupillometryr_data(data = df,
                                  subject = ID,
                                  trial = Trial,
                                  time = Time,
                                  condition = Type)
 
-new_data <-  Sdata17
+plot(df, pupil = LPupil, group = 'condition')
+plot(df, pupil = LPupil, group = 'subject') 
 
-plot(new_data, pupil = LPupil, group = 'condition')
-plot(new_data, pupil = LPupil, group = 'subject') 
-
-regressed_data <- regress_data(data = new_data,
+regressed_data <- regress_data(data = df,
                                pupil1 = RPupil,
                                pupil2 = LPupil)
 
@@ -52,15 +65,7 @@ mean_data <- downsample_time_data(data = mean_data,
                                   timebin_size = 10,
                                   option = 'median')
 
-missing <- calculate_missing_data(mean_data, 
-                                  mean_pupil)
-
-mean_data2 <- clean_missing_data(mean_data,
-                                 pupil = mean_pupil,
-                                 trial_threshold = .75,
-                                 subject_trial_threshold = .75)
-
-filtered_data <- filter_data(data = mean_data2,
+filtered_data <- filter_data(data = mean_data,
                              pupil = mean_pupil,
                              filter = 'median',
                              degree = 11)
