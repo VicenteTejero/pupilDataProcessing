@@ -41,7 +41,25 @@ for (i in 2:17) {
   df <- df[df$FPOGV != 0, ]
   df <- df %>% filter(Trial != 'STOP_TRIAL')
   
-
+  # Renombrar Trial basado en patrones
+  df <- df %>%
+    mutate(Trial = case_when(
+      grepl("PLOT_1YTD", Trial) ~ "1 year (S&P)",
+      grepl("PLOT_COMBINED_1YTD", Trial) ~ "1 year (S&P & Bloomberg)",
+      grepl("PLOT_2YTD", Trial) ~ "2 year (S&P)",
+      grepl("PLOT_COMBINED_2YTD", Trial) ~ "2 year (S&P & Bloomberg)",
+      grepl("PLOT_3YTD", Trial) ~ "3 year (S&P)",
+      grepl("PLOT_COMBINED_3YTD", Trial) ~ "3 year (S&P & Bloomberg)",
+      grepl("PLOT_4YTD", Trial) ~ "4 year (S&P)",
+      grepl("PLOT_COMBINED_4YTD", Trial) ~ "4 year (S&P & Bloomberg)",
+      grepl("PLOT_5YTD", Trial) ~ "5 year (S&P)",
+      grepl("PLOT_COMBINED_5YTD", Trial) ~ "5 year (S&P & Bloomberg)",
+      grepl("PLOT_6YTD", Trial) ~ "6 year (S&P)",
+      grepl("PLOT_COMBINED_6YTD", Trial) ~ "6 year (S&P & Bloomberg)",
+      grepl("PLOT_7YTD", Trial) ~ "7 year (S&P)",
+      grepl("PLOT_COMBINED_7YTD", Trial) ~ "7 year (S&P & Bloomberg)",
+      TRUE ~ Trial  # Mantener los valores originales si no coinciden
+    ))
   
   # Añadir el dataframe a la lista
   list_of_dataframes[[i]] <- df
@@ -99,7 +117,7 @@ plot(filtered_data, pupil = mean_pupil, group = 'condition')
 plot(filtered_data, pupil = mean_pupil, group = 'subject')
 plot(filtered_data, pupil = mean_pupil, group = 'Type')
 
-ggplot(filtered_data, aes(x = Time, y = Trial, color = Type)) +
+ggplot(filtered_data, aes(x = Time, y = mean_pupil, color = Trial)) +
   geom_line() +
   labs(title = "Pupil Dilation Over Time by Trial",
        x = "Time Trial",
