@@ -38,7 +38,6 @@ for (i in 2:17) {
   df$Trial <- na.locf(df$Trial, na.rm = FALSE)
   df$Trial <- as.character(df$Trial)  # Asegurar que Trial sea de tipo character
   df$ID <- as.character(i)
-  df <- df[df$FPOGV != 0, ]
   df <- df %>% filter(Trial != 'STOP_TRIAL')
   
   # Renombrar Trial basado en patrones
@@ -68,6 +67,12 @@ for (i in 2:17) {
 # Combinar todos los dataframes en uno solo
 df <- bind_rows(list_of_dataframes)
 
+df <- df %>%
+  mutate(
+    RPD = ifelse(FPOGV == 0, NA, RPD),
+    LPD = ifelse(FPOGV == 0, NA, LPD)
+  )
+
 # Crear la columna Type basada en la columna Trial
 df <- df %>%
   mutate(Type = ifelse(grepl("Bloomberg", Trial), "S&P y Bloomberg", "S&P"))
@@ -89,9 +94,6 @@ df <- make_pupillometryr_data(data = df,
                                  time = Time,
                                  condition = Type)
 
-plot(df, pupil = LPupil, group = 'condition')
-plot(df, pupil = LPupil, group = 'subject') 
-
 regressed_data <- regress_data(data = df,
                                pupil1 = RPupil,
                                pupil2 = LPupil)
@@ -100,12 +102,14 @@ mean_data <- calculate_mean_pupil_size(data = regressed_data,
                                        pupil1 = RPupil, 
                                        pupil2 = LPupil)
 
-plot(mean_data, pupil = mean_pupil, group = 'condition')
-plot(mean_data, pupil = mean_pupil, group = 'subject')
+mean_data_base <- baseline_data(data = mean_data, pupil = mean_pupil, start = 0, stop = 100)
 
-mean_data_downsample <- downsample_time_data(data = mean_data,
+plot(mean_data_base, pupil = mean_pupil, group = 'condition')
+plot(mean_data_base, pupil = mean_pupil, group = 'subject')
+
+mean_data_downsample <- downsample_time_data(data = mean_data_base,
                                   pupil = mean_pupil,
-                                  timebin_size = 0.1,
+                                  timebin_size = 0.5,
                                   option = 'median')
 
 filtered_data <- filter_data(data = mean_data_downsample,
@@ -117,12 +121,19 @@ plot(filtered_data, pupil = mean_pupil, group = 'condition')
 plot(filtered_data, pupil = mean_pupil, group = 'subject')
 plot(filtered_data, pupil = mean_pupil, group = 'Type')
 
+int_data <- interpolate_data(data = filtered_data,
+                             pupil = mean_pupil,
+                             type = 'linear')
+
+plot(int_data, pupil = mean_pupil, group = 'condition')
+plot(int_data, pupil = mean_pupil, group = 'subject')
+plot(int_data, pupil = mean_pupil, group = 'Type')
 # Grafico de la dilatacion pupilar promedio por tiempo y por ensayo
 ggplot(filtered_data, aes(x = Time, y = mean_pupil, color = Trial)) +
   geom_line() +
   labs(title = "Pupil Dilation Over Time by Trial",
        x = "Time Trial",
-       y = "Mean Pupil Dilation",
+       y = "Mean Pupil Size",
        color = "Trial") +
   theme_minimal() +
   theme(legend.position = "right")
@@ -133,7 +144,7 @@ ggplot(filtered_data, aes(x = Time, y = mean_pupil, color = Trial)) +
   facet_wrap(~ Type) +
   labs(title = "Pupil Dilation Over Time by Trial",
        x = "Time Trial",
-       y = "Mean Pupil Dilation",
+       y = "Mean Pupil Size",
        color = "Trial") +
   theme_minimal() +
   theme(legend.position = "right")
