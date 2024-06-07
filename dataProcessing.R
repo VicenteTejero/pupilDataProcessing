@@ -120,19 +120,21 @@ filtered_data <- filter_data(data = mean_data_downsample,
                              degree = 11)
 
 #plot(mean_data_downsample, pupil = mean_pupil, group = 'condition')
-#plot(mean_data_downsample, pupil = mean_pupil, group = 'subject')
+plot(mean_data_downsample, pupil = mean_pupil, group = 'subject')
 #plot(mean_data_downsample, pupil = mean_pupil, group = 'Type')
 
 int_data <- interpolate_data(data = mean_data_downsample,
                              pupil = mean_pupil,
                              type = 'linear')
 
+plot(int_data, pupil = mean_pupil, group = 'subject')
+
 base_data <- baseline_data(data = int_data,
                            pupil = mean_pupil,
                            start = 0,
                            stop = 100)
 
-
+plot(base_data, pupil = mean_pupil, group = 'subject')
 
 # Grafico de la dilatacion pupilar promedio por tiempo y por ensayo
 ggplot(base_data, aes(x = Time, y = mean_pupil, color = Trial)) +
@@ -155,8 +157,11 @@ ggplot(base_data, aes(x = Time, y = mean_pupil, color = Trial)) +
   theme_minimal() +
   theme(legend.position = "right")
 
+window <- create_window_data(data = base_data,
+                             pupil = mean_pupil)
+plot(window, pupil = mean_pupil, windows = F, geom = 'boxplot')
 
-
+with(window, t.test(mean_pupil[Type == 'S&P'], mean_pupil[Type == 'S&P y Bloomberg'], paired = T))
 
 
 
