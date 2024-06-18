@@ -1,4 +1,6 @@
 library(readr)
+library(tidyverse)
+library(zoo)
 
 # Inicializar una lista para almacenar los dataframes
 list_of_dataframes <- list()
