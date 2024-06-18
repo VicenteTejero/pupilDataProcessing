@@ -1,89 +1,10 @@
 # Cargar los paquetes necesarios
 library(PupillometryR)
 library(ggplot2)
-library(readr)
 library(zoo)
 library(dplyr)
+library(kableExtra)
 
-# Inicializar una lista para almacenar los dataframes
-list_of_dataframes <- list()
-
-# Bucle para leer y preprocesar cada archivo
-for (i in 2:17) {
-  if (i == 12 || i == 9) next
-  
-  file_name <- paste0('ESG_exp/subject-', i, '.tsv')
-  df <- read_tsv(file_name)
-  df <- df[-c(1:4), ]
-  
-  # Preprocesamiento
-  df <- df %>% rename(Trial = USER)
-  
-  df <- df %>%
-    mutate(Time_Trial = {
-      start_time <- NA
-      time_trial <- numeric(length(df$TIME))
-      
-      for (j in seq_along(df$TIME)) {
-        if (grepl("START_TRIAL", df$Trial[j])) {
-          start_time <- df$TIME[j]
-          time_trial[j] <- 0
-        } else if (!is.na(start_time)) {
-          time_trial[j] <- df$TIME[j] - start_time
-        }
-      }
-      time_trial
-    })
-  
-  df$Trial <- na.locf(df$Trial, na.rm = FALSE)
-  df$Trial <- as.character(df$Trial)  # Asegurar que Trial sea de tipo character
-  df$ID <- as.character(i)
-  df <- df %>% filter(Trial != 'STOP_TRIAL')
-  
-  # Renombrar Trial basado en patrones
-  df <- df %>%
-    mutate(Trial = case_when(
-      grepl("PLOT_1YTD", Trial) ~ "1 year (S&P)",
-      grepl("PLOT_COMBINED_1YTD", Trial) ~ "1 year (S&P & Bloomberg)",
-      grepl("PLOT_2YTD", Trial) ~ "2 year (S&P)",
-      grepl("PLOT_COMBINED_2YTD", Trial) ~ "2 year (S&P & Bloomberg)",
-      grepl("PLOT_3YTD", Trial) ~ "3 year (S&P)",
-      grepl("PLOT_COMBINED_3YTD", Trial) ~ "3 year (S&P & Bloomberg)",
-      grepl("PLOT_4YTD", Trial) ~ "4 year (S&P)",
-      grepl("PLOT_COMBINED_4YTD", Trial) ~ "4 year (S&P & Bloomberg)",
-      grepl("PLOT_5YTD", Trial) ~ "5 year (S&P)",
-      grepl("PLOT_COMBINED_5YTD", Trial) ~ "5 year (S&P & Bloomberg)",
-      grepl("PLOT_6YTD", Trial) ~ "6 year (S&P)",
-      grepl("PLOT_COMBINED_6YTD", Trial) ~ "6 year (S&P & Bloomberg)",
-      grepl("PLOT_7YTD", Trial) ~ "7 year (S&P)",
-      grepl("PLOT_COMBINED_7YTD", Trial) ~ "7 year (S&P & Bloomberg)",
-      TRUE ~ Trial  # Mantener los valores originales si no coinciden
-    ))
-  
-  # Añadir el dataframe a la lista
-  list_of_dataframes[[i]] <- df
-}
-
-# Combinar todos los dataframes en uno solo
-df <- bind_rows(list_of_dataframes)
-
-df <- df %>%
-  mutate(
-    RPD = ifelse(FPOGV == 0, NA, RPD),
-    LPD = ifelse(FPOGV == 0, NA, LPD)
-  )
-
-# Crear la columna Type basada en la columna Trial
-df <- df %>%
-  mutate(Type = ifelse(grepl("Bloomberg", Trial), "S&P y Bloomberg", "S&P"))
-
-# Seleccionar y renombrar columnas
-df <- df %>% select(ID, Trial, Time_Trial, LPD, RPD, Type) %>%
-  rename(
-    Time = Time_Trial,
-    LPupil = LPD,
-    RPupil = RPD
-  )
 
 #Theme graficos
 theme_set(theme_classic(base_size = 12))
@@ -107,6 +28,7 @@ mean_data2 <- clean_missing_data(mean_data,
                                  trial_threshold = .75,
                                  subject_trial_threshold = .75)
 
+test <- mean_data %>% filter(ID == 13)
 
 mean_data_downsample <- downsample_time_data(data = mean_data2,
                                   pupil = mean_pupil,
@@ -119,22 +41,57 @@ filtered_data <- filter_data(data = mean_data_downsample,
                              filter = 'median',
                              degree = 11)
 
-#plot(mean_data_downsample, pupil = mean_pupil, group = 'condition')
-plot(mean_data_downsample, pupil = mean_pupil, group = 'subject')
-#plot(mean_data_downsample, pupil = mean_pupil, group = 'Type')
-
 int_data <- interpolate_data(data = mean_data_downsample,
                              pupil = mean_pupil,
                              type = 'linear')
-
-plot(int_data, pupil = mean_pupil, group = 'subject')
 
 base_data <- baseline_data(data = int_data,
                            pupil = mean_pupil,
                            start = 0,
                            stop = 100)
 
+base_data <- base_data %>%
+  filter(mean_pupil < 10)
+
+base_data_correctAnswer <- base_data %>%
+  filter(Trial %in% c('1 año (S&P)', '2 años (S&P)', '3 años (S&P)'))
+
+
+base_data_valid <- base_data %>%
+  filter(Trial != '1 año (S&P)' & Trial != '2 años (S&P)' & Trial != '3 años (S&P)')
+
+#MEANS
+print(mean(base_data_valid$mean_pupil))
+print(mean(base_data_correctAnswer$mean_pupil))
+
+mean_data_byID <- int_data %>%
+  group_by(ID) %>%
+  summarise(mean_pupil_mean = mean(mean_pupil, na.rm = TRUE)) %>%
+  arrange(ID)
+
+# Output the table
+kable(mean_data_byID, format = "simple", booktabs = TRUE, col.names = c("ID", "Promedio del Tamaño de Pupila"))
+
+deviation_summary <- int_data %>%
+  group_by(ID) %>%
+  summarise(
+    mean_pupil_mean = mean(mean_pupil, na.rm = TRUE),
+    std_deviation = sd(mean_pupil, na.rm = TRUE)
+  ) %>%
+  arrange(ID)
+
+# Output the table
+kable(deviation_summary, format = "simple", booktabs = TRUE, col.names = c("ID", "Promedio del Tamaño de Pupila", "Desviación Estándar"))
+
+##PLOTS
+
+plot(mean_data_downsample, pupil = mean_pupil, group = 'condition')
+plot(mean_data_downsample, pupil = mean_pupil, group = 'subject')
+plot(mean_data_downsample, pupil = mean_pupil, group = 'Type')
+plot(int_data, pupil = mean_pupil, group = 'subject')
+plot(int_data, pupil = mean_pupil, group = 'subject')
 plot(base_data, pupil = mean_pupil, group = 'subject')
+
 
 # Grafico de la dilatacion pupilar promedio por tiempo y por ensayo
 ggplot(base_data, aes(x = Time, y = mean_pupil, color = Trial)) +
@@ -145,6 +102,7 @@ ggplot(base_data, aes(x = Time, y = mean_pupil, color = Trial)) +
        color = "Trial") +
   theme_minimal() +
   theme(legend.position = "right")
+
 
 # Crear el gráfico faceteado por 'Type'
 ggplot(base_data, aes(x = Time, y = mean_pupil, color = Trial)) +
@@ -157,11 +115,25 @@ ggplot(base_data, aes(x = Time, y = mean_pupil, color = Trial)) +
   theme_minimal() +
   theme(legend.position = "right")
 
-window <- create_window_data(data = base_data,
-                             pupil = mean_pupil)
-plot(window, pupil = mean_pupil, windows = F, geom = 'boxplot')
+ggplot(base_data_correctAnswer, aes(x = Time, y = mean_pupil, color = Trial)) +
+  geom_line() +
+  facet_wrap(~ Type) +
+  labs(title = "Pupil Dilation Over Time by Trial in correct answer graphs",
+       x = "Time Trial",
+       y = "Mean Pupil Size",
+       color = "Trial") +
+  theme_minimal() +
+  theme(legend.position = "right")
 
-with(window, t.test(mean_pupil[Type == 'S&P'], mean_pupil[Type == 'S&P y Bloomberg'], paired = T))
+ggplot(base_data_valid, aes(x = Time, y = mean_pupil, color = Trial)) +
+  geom_line() +
+  labs(title = "Pupil Dilation Over Time by Tria in decision graphs",
+       x = "Time Trial",
+       y = "Mean Pupil Size",
+       color = "Trial") +
+  theme_minimal() +
+  theme(legend.position = "right")
+
 
 
 
