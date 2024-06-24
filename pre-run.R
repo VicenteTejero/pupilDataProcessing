@@ -1,7 +1,9 @@
 library(readr)
 library(tidyverse)
 library(zoo)
+library(readxl)
 
+respuestasCuestionario <- read_excel("respuestasCuestionario.xlsx")
 # Inicializar una lista para almacenar los dataframes
 list_of_dataframes <- list()
 
@@ -83,3 +85,19 @@ df <- df %>%
     RPupil = RPD
   ) %>%
   mutate(MeanPupil = (LPupil + RPupil) / 2)
+
+# Rename the subject column to ID for consistency
+respuestasCuestionario <- respuestasCuestionario %>%
+  rename(ID = subject)
+
+# Select specific columns from respuestasCuestionario
+selected_columns <- respuestasCuestionario %>%
+  select(ID, total_crt, edad, genero, interes_empresas_asg, estilo_decisiones)  # Replace column1, column2, column3 with actual column names you need
+
+# Perform the left join to add the selected columns to df
+df <- df %>%
+  left_join(selected_columns, by = "ID")
+
+
+
+
