@@ -4,6 +4,7 @@ library(zoo)
 library(readxl)
 
 respuestasCuestionario <- read_excel("respuestasCuestionario.xlsx")
+data <- read_excel("filteredData.xlsx", sheet = "Analysis (2)")
 # Inicializar una lista para almacenar los dataframes
 list_of_dataframes <- list()
 
