@@ -5,6 +5,11 @@ library(readxl)
 
 respuestasCuestionario <- read_excel("respuestasCuestionario.xlsx")
 data <- read_excel("filteredData.xlsx", sheet = "Analysis (2)")
+dataRaw <- read_excel("filteredData.xlsx", sheet = 'SQM',
+                           col_types = c("date", "numeric", "numeric", 
+                                         "numeric", "numeric", "numeric", 
+                                         "numeric", "numeric", "numeric", 
+                                         "numeric", "numeric"))
 # Inicializar una lista para almacenar los dataframes
 list_of_dataframes <- list()
 

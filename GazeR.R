@@ -103,6 +103,24 @@ create_plot_pupilCRT <- function(data, trial_name, main_title) {
   lines(smoothingSpline2, col = 'red')
 }
 
+create_plot_pupil_interest <- function(data, trial_name, main_title) {
+  trial_data <- filter(data, trial == trial_name)
+  
+  subset_1 <- filter(trial_data, esg_investment == 'Nada interesado/a' | esg_investment == 'Poco interesado/a') %>%
+    arrange(time)
+  subset_2 <- filter(trial_data, esg_investment == 'Algo interesado/a' | esg_investment == 'Muy interesado/a') %>%
+    arrange(time)
+  
+  plot(1, type = "n", xlim = c(0, max(max(subset_1$time), max(subset_2$time))), ylim = c(min(baseline_pupil$baselinecorrectedp), max(baseline_pupil$baselinecorrectedp)),
+       xlab = 'Time', ylab = 'Pupil Size', main = main_title)
+  
+  smoothingSpline1 <- smooth.spline(x = subset_1$time, y = subset_1$baselinecorrectedp, spar = 0.4)
+  lines(smoothingSpline1, col = 'red')
+  
+  smoothingSpline2 <- smooth.spline(x = subset_2$time, y = subset_2$baselinecorrectedp, spar = 0.4)
+  lines(smoothingSpline2, col = 'blue')
+}
+
 # Set up the layout for 3 columns and 5 rows
 par(mfrow = c(5, 3), mar = c(4, 4, 2, 1))
 
