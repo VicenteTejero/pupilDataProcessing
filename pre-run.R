@@ -5,7 +5,7 @@ library(readxl)
 
 respuestasCuestionario <- read_excel("respuestasCuestionario.xlsx")
 data <- read_excel("filteredData.xlsx", sheet = "Analysis (2)")
-dataRaw <- read_excel("filteredData.xlsx", sheet = 'SQM',
+dataSQM <- read_excel("filteredData.xlsx", sheet = 'SQM',
                            col_types = c("date", "numeric", "numeric", 
                                          "numeric", "numeric", "numeric", 
                                          "numeric", "numeric", "numeric", 
