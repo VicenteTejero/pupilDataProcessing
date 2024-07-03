@@ -3,10 +3,6 @@ library(DCchoice)
 library(tidyr)
 library(detectseparation)
 
-# Load the data
-respuestasCuestionario <- read_excel("~/Desktop/respuestasCuestionario.xlsx")
-
-# Prepare the DCchoice dataframe
 DCchoice <- data.frame(subject = respuestasCuestionario$subject)
 
 DCchoice$WTP <- ifelse(respuestasCuestionario$rentabilidad_asg == "Menor que la media del mercado", "Si", 

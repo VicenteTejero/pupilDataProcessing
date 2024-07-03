@@ -3,9 +3,9 @@ library(tidyverse)
 library(zoo)
 library(readxl)
 
-respuestasCuestionario <- read_excel("respuestasCuestionario.xlsx")
-data <- read_excel("filteredData.xlsx", sheet = "Analysis (2)")
-dataSQM <- read_excel("filteredData.xlsx", sheet = 'SQM',
+respuestasCuestionario <- read_excel("Data/respuestasCuestionario.xlsx")
+data <- read_excel("Data/filteredData.xlsx", sheet = "Analysis (2)")
+dataSQM <- read_excel("Data/filteredData.xlsx", sheet = 'SQM',
                            col_types = c("date", "numeric", "numeric", 
                                          "numeric", "numeric", "numeric", 
                                          "numeric", "numeric", "numeric", 
@@ -17,7 +17,7 @@ list_of_dataframes <- list()
 for (i in 2:17) {
   if (i == 12 || i == 9) next
   
-  file_name <- paste0('ESG_exp/subject-', i, '.tsv')
+  file_name <- paste0('Data/ESG_exp/subject-', i, '.tsv')
   df <- read_tsv(file_name)
   df <- df[-c(1:4), ]
   

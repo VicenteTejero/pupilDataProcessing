@@ -168,13 +168,19 @@ create_plot_pupilCRT(baseline_pupil, "5 años (S&P y Bloomberg)", "Pupil Size fo
 create_plot_pupilCRT(baseline_pupil, "6 años (S&P y Bloomberg)", "Pupil Size for 6 años (S&P y Bloomberg)")
 create_plot_pupilCRT(baseline_pupil, "7 años (S&P y Bloomberg)", "Pupil Size for 7 años (S&P y Bloomberg)")
 
-# Reset the layout
+
 par(mfrow = c(1, 1))
 
 
-baseline_pupil_test <- baseline_pupil %>%
-  filter(trial == '5 años (S&P y Bloomberg)' & (crt == 0 | crt == 1))
+summary_table <- baseline_pupil %>%
+  group_by(trial) %>%
+  summarise(
+    min = min(baselinecorrectedp, na.rm = TRUE),
+    max = max(baselinecorrectedp, na.rm = TRUE),
+    mean = mean(baselinecorrectedp, na.rm = TRUE),
+    median = median(baselinecorrectedp, na.rm = TRUE),
+    sd = sd(baselinecorrectedp, na.rm = TRUE)
+  )
 
 
-baseline_pupil_test2 <- baseline_pupil %>%
-  filter(trial == '5 años (S&P y Bloomberg)' & (crt == 2 | crt == 3))
+kable(summary_table, caption = "Resumen Estadístico por Trial")
